@@ -91,28 +91,29 @@ Sin texto adicional fuera de este JSON.
 """
 
     try:
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",  # o "gpt-4" si lo tienes disponible
-            messages=[{"role": "user", "content": prompt}],
-            max_tokens=300,
-            temperature=0.8  # Ajusta para mayor o menor creatividad
-        )
+response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[{"role": "user", "content": prompt}],
+        max_tokens=300,
+        temperature=0.8
+    )
 
-        raw_text = response.choices[0].message.content.strip()
+    raw_text = response.choices[0].message.content.strip()
 
-        # Parseamos la respuesta como JSON
-        try:
-            definition_json = json.loads(raw_text)
-        except json.JSONDecodeError:
-            return jsonify({
-                "error": "La IA no devolvió un JSON válido.",
-                "raw": raw_text
-            }), 500
+    # Try parsing the response as JSON
+    try:
+        definition_json = json.loads(raw_text)
+    except json.JSONDecodeError:
+        return jsonify({
+            "error": "OpenAI did not return valid JSON.",
+            "raw": raw_text
+        }), 500
 
-        return jsonify(definition_json)
+    return jsonify(definition_json)
 
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+except Exception as e:
+    print("🔥 ERROR:", str(e)) 
+    return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
     app.run(debug=True)
