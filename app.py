@@ -5,7 +5,10 @@ from flask_cors import CORS
 import openai
 
 app = Flask(__name__)
-CORS(app, resources={r'/*': {'origins': '*'}}, supports_credentials=True)
+CORS(app, resources={
+    r"/generate-definition": {"origins": "https://gregarious-custard-a60b6a.netlify.app"},
+    r"/": {"origins": "https://gregarious-custard-a60b6a.netlify.app"}
+}, supports_credentials=True)
 
 # Lee la clave de OpenAI desde la variable de entorno (no la incluyas en el código)
 openai.api_key = os.environ.get("OPENAI_API_KEY")
